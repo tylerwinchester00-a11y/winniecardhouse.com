@@ -53,7 +53,12 @@ if (submissionForm) {
     status.className = 'note form-status';
     status.textContent = 'Sending your collection details — please keep this page open for a moment.';
     try {
-      const response = await fetch(submissionForm.action, { method: 'POST', body: new FormData(submissionForm), headers: { 'Accept': 'application/json' } });
+      const payload = Object.fromEntries(new FormData(submissionForm).entries());
+      const response = await fetch(submissionForm.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
       const result = await response.json();
       if (response.ok && (result.success === 'true' || result.success === true)) {
         status.className = 'note form-status success';
@@ -62,7 +67,7 @@ if (submissionForm) {
       } else { throw new Error('The form service did not confirm receipt.'); }
     } catch (error) {
       status.className = 'note form-status error';
-      status.textContent = 'Sorry, we couldn’t confirm your submission. Please email tyler@winniecardhouse.com directly and include your collection details.';
+      status.textContent = 'We couldn’t send this form. If this is your first submission, check tyler@winniecardhouse.com for FormSubmit’s activation email. You can also email tyler@winniecardhouse.com directly with your collection details.';
     } finally { button.disabled = false; button.textContent = originalText; }
   });
 }
