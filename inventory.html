@@ -47,8 +47,46 @@
   if(c.description)card.append(el('p','muted',c.description));
   const price=Number(c.price);
   if(Number.isFinite(price))card.append(el('p','price','$'+price.toFixed(2)));
+  const cardTitle=[c.player,c.card_name].filter(Boolean).join(' — ')||'Sports card';
+  const details=[
+   'Hi WinnieCardHouse,',
+   '',
+   'I have a question about this card:',
+   'Card: '+cardTitle,
+   'Price listed: '+(Number.isFinite(price)?'
+  return card;
+ }
+ async function load(){
+  try{
+   const {data,error}=await db.from('cards').select('id,player,card_name,year,set_name,condition,description,price,image_url').eq('status','available').order('created_at',{ascending:false});
+   if(error)throw error;
+   root.replaceChildren();
+   if(!data||!data.length){
+    const empty=el('div','card status');empty.append(el('h2','','No cards listed right now'),el('p','muted','Check back soon or contact us about a card you are looking for.'));
+    const link=el('a','btn','Contact WinnieCardHouse');link.href='index.html#contact';empty.append(link);root.append(empty);return;
+   }
+   data.forEach(c=>root.append(renderCard(c)));
+  }catch(err){
+   root.replaceChildren();const box=el('div','card status');box.append(el('h2','','Inventory is temporarily unavailable'),el('p','muted','Please try again later or email tyler@winniecardhouse.com for current listings.'));root.append(box);console.error('WinnieCardHouse inventory:',err.message);
+  }
+ }
+ load();
+})();
+</script>
+</body>
+</html>+price.toFixed(2):'Please confirm'),
+   c.year?'Year: '+c.year:'',
+   c.set_name?'Set: '+c.set_name:'',
+   c.condition?'Condition: '+c.condition:'',
+   c.image_url?'Card image: '+c.image_url:'',
+   '',
+   'Could you please confirm availability and provide any additional details?',
+   '',
+   'Thank you!'
+  ].filter(Boolean).join('\n');
   const link=el('a','btn','Ask about this card');
-  link.href='mailto:tyler@winniecardhouse.com?subject='+encodeURIComponent('Question about '+[c.player,c.card_name].filter(Boolean).join(' — '));
+  link.href='mailto:tyler@winniecardhouse.com?subject='+encodeURIComponent('Question about '+cardTitle)+'&body='+encodeURIComponent(details);
+  link.setAttribute('aria-label','Email WinnieCardHouse about '+cardTitle);
   card.append(link);
   return card;
  }
