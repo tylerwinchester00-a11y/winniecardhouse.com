@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Browse available sports cards at WinnieCardHouse.">
+<title>Our Inventory | WinnieCardHouse</title>
+<style>
+:root{--bg:#080e1d;--panel:#111d35;--text:#f7fbff;--muted:#c2d2e9;--line:#29466d;--blue:#19c5ff;--blue2:#8be7ff;--pink:#ff5fb7}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 8% 10%,#123f79 0,transparent 28%),radial-gradient(ellipse at 92% 32%,#32175e 0,transparent 26%),#080e1d;color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}a{color:var(--blue2)}.wrap{width:min(1120px,92%);margin:auto}header{position:sticky;top:0;z-index:5;background:#060c1aeb;border-bottom:1px solid #2a80b8}.nav{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 0}.brand{font-weight:900;letter-spacing:.5px;font-size:1.2rem;text-decoration:none;color:var(--text)}.brand span{color:var(--blue)}nav{display:flex;gap:20px;flex-wrap:wrap}nav a{text-decoration:none;color:var(--text)}nav a:hover{color:var(--blue2)}.hero{padding:62px 0 36px;border-bottom:1px solid var(--line);background:linear-gradient(125deg,#101d3c,#081326 58%,#151032)}.eyebrow{color:var(--blue2);font-size:.8rem;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(2.3rem,5vw,4rem);line-height:1.08;margin:12px 0}.hero p,.muted{color:var(--muted)}.btn{display:inline-block;padding:11px 17px;border-radius:999px;text-decoration:none;font-weight:850;background:linear-gradient(115deg,#13b8f4,#5de4ff 55%,#b4f6ff);color:#061326;border:1px solid #a9f1ff}.inventory{padding:38px 0 70px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.card{padding:18px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#152746,#10182d 72%,#191632);box-shadow:0 12px 30px #02071355;min-width:0}.card img{display:block;width:100%;height:250px;object-fit:contain;background:#080f20;border-radius:10px;margin-bottom:15px}.card h2{font-size:1.1rem;line-height:1.35;margin:0 0 7px}.price{font-size:1.35rem;font-weight:900;color:var(--blue2);margin:12px 0}.status{padding:28px;text-align:center}.status h2{margin-top:0}footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-size:.9rem}@media(max-width:760px){.nav{align-items:flex-start;flex-direction:column}nav{gap:12px}.grid{grid-template-columns:1fr}.card img{height:280px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="index.html">WINNIE<span>CARD</span>HOUSE</a><nav aria-label="Main navigation"><a href="inventory.html" aria-current="page">Our Inventory</a><a href="index.html#how">How it works</a><a href="index.html#commission">Commission</a><a href="index.html#trust">Trust</a><a href="index.html#submit">Submit a collection</a><a href="index.html#contact">Contact</a></nav></div></header>
+<main>
+<section class="hero"><div class="wrap"><div class="eyebrow">Shop WinnieCardHouse</div><h1>Our Inventory</h1><p>Browse sports cards currently available. Have a question about a card? Contact us before purchasing to confirm availability and details.</p><a class="btn" href="index.html">Back to home</a></div></section>
+<section class="inventory"><div class="wrap"><div id="live-inventory" class="grid"><div class="card status"><h2>Loading available cards…</h2><p class="muted">Please wait while we check current inventory.</p></div></div><p class="muted" style="margin-top:20px">Availability and price should be confirmed before purchase. This website does not process payment or complete checkout yet.</p></div></section>
+</main>
+<footer><div class="wrap">© <span id="year"></span> WinnieCardHouse · Sports cards for collectors</div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+ const url='https://pkhddcfemlnhwlaklzlw.supabase.co';
+ const key='sb_publishable_DkeILWR8Be68FK6c8UK0Sw_0TotOdmC';
+ const root=document.getElementById('live-inventory');
+ if(!root||!window.supabase)return;
+ const db=window.supabase.createClient(url,key);
+ const el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;};
+ function renderCard(c){
+  const card=el('article','card');
+  if(c.image_url){const img=el('img');img.src=c.image_url;img.alt=[c.player,c.card_name].filter(Boolean).join(' — ');img.loading='lazy';card.append(img);}
+  card.append(el('h2','',[c.player,c.card_name].filter(Boolean).join(' — ')||'Sports card'));
+  const meta=[c.year,c.set_name,c.condition].filter(Boolean).join(' · ');
+  if(meta)card.append(el('p','muted',meta));
+  if(c.description)card.append(el('p','muted',c.description));
+  const price=Number(c.price);
+  if(Number.isFinite(price))card.append(el('p','price','$'+price.toFixed(2)));
+  const link=el('a','btn','Ask about this card');
+  link.href='mailto:tyler@winniecardhouse.com?subject='+encodeURIComponent('Question about '+[c.player,c.card_name].filter(Boolean).join(' — '));
+  card.append(link);
+  return card;
+ }
+ async function load(){
+  try{
+   const {data,error}=await db.from('cards').select('id,player,card_name,year,set_name,condition,description,price,image_url').eq('status','available').order('created_at',{ascending:false});
+   if(error)throw error;
+   root.replaceChildren();
+   if(!data||!data.length){
+    const empty=el('div','card status');empty.append(el('h2','','No cards listed right now'),el('p','muted','Check back soon or contact us about a card you are looking for.'));
+    const link=el('a','btn','Contact WinnieCardHouse');link.href='index.html#contact';empty.append(link);root.append(empty);return;
+   }
+   data.forEach(c=>root.append(renderCard(c)));
+  }catch(err){
+   root.replaceChildren();const box=el('div','card status');box.append(el('h2','','Inventory is temporarily unavailable'),el('p','muted','Please try again later or email tyler@winniecardhouse.com for current listings.'));root.append(box);console.error('WinnieCardHouse inventory:',err.message);
+  }
+ }
+ load();
+})();
+</script>
+</body>
+</html>
