@@ -40,20 +40,50 @@
  const el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;};
  function renderCard(c){
   const card=el('article','card');
-  if(c.image_url){const caption=[c.player,c.card_name].filter(Boolean).join(' — ')||'Sports card';const photoButton=el('button','card-photo-button');photoButton.type='button';photoButton.setAttribute('aria-label','View larger image: '+caption);const img=el('img');img.src=c.image_url;img.alt=caption;img.loading='lazy';photoButton.append(img);photoButton.addEventListener('click',function(){openLightbox(c.image_url,caption,photoButton);});card.append(photoButton);card.append(el('p','zoom-hint','Click photo to enlarge'));}
-  card.append(el('h2','',[c.player,c.card_name].filter(Boolean).join(' — ')||'Sports card'));
+  const cardTitle=[c.player,c.card_name].filter(Boolean).join(' — ')||'Sports card';
+  if(c.image_url){
+   const caption=cardTitle;
+   const photoButton=el('button','card-photo-button');
+   photoButton.type='button';
+   photoButton.setAttribute('aria-label','View larger image: '+caption);
+   const img=el('img');
+   img.src=c.image_url;
+   img.alt=caption;
+   img.loading='lazy';
+   photoButton.append(img);
+   photoButton.addEventListener('click',function(){openLightbox(c.image_url,caption,photoButton);});
+   card.append(photoButton);
+   card.append(el('p','zoom-hint','Click photo to enlarge'));
+  }
+  card.append(el('h2','',cardTitle));
   const meta=[c.year,c.set_name,c.condition].filter(Boolean).join(' · ');
   if(meta)card.append(el('p','muted',meta));
   if(c.description)card.append(el('p','muted',c.description));
   const price=Number(c.price);
   if(Number.isFinite(price))card.append(el('p','price','$'+price.toFixed(2)));
-  const cardTitle=[c.player,c.card_name].filter(Boolean).join(' — ')||'Sports card';
+  const newline=String.fromCharCode(10);
   const details=[
    'Hi WinnieCardHouse,',
    '',
    'I have a question about this card:',
    'Card: '+cardTitle,
-   'Price listed: '+(Number.isFinite(price)?'
+   'Price listed: '+(Number.isFinite(price)?'$'+price.toFixed(2):'Please confirm'),
+   c.year?'Year: '+c.year:'',
+   c.set_name?'Set: '+c.set_name:'',
+   c.condition?'Condition: '+c.condition:'',
+   c.image_url?'Card image: '+c.image_url:'',
+   '',
+   'Could you please confirm availability and provide any additional details?',
+   '',
+   'Thank you!'
+  ].filter(Boolean).join(newline);
+  const subject='Question about '+cardTitle;
+  const link=el('a','btn','Ask about this card');
+  link.href='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent('tyler@winniecardhouse.com')+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(details);
+  link.target='_blank';
+  link.rel='noopener noreferrer';
+  link.setAttribute('aria-label','Open an email to WinnieCardHouse about '+cardTitle);
+  card.append(link);
   return card;
  }
  async function load(){
