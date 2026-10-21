@@ -44,6 +44,36 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 main,section,footer{position:relative}
 @media(prefers-reduced-motion:reduce){body,body:before{animation:none!important}}
 
+
+/* BOLD FULL-PAGE SPORTS-CARD ARENA BACKGROUND */
+html{min-height:100%;background:#050918!important}
+body{position:relative;isolation:isolate;min-height:100vh;background-color:#050918!important;background-image:
+radial-gradient(ellipse at 8% 8%,rgba(0,205,255,.36),transparent 32%),
+radial-gradient(ellipse at 92% 16%,rgba(176,55,255,.34),transparent 34%),
+radial-gradient(ellipse at 78% 78%,rgba(255,43,155,.24),transparent 32%),
+radial-gradient(ellipse at 18% 88%,rgba(0,130,255,.28),transparent 34%),
+linear-gradient(115deg,transparent 0 13%,rgba(22,201,255,.10) 13.2%,transparent 19%,transparent 48%,rgba(177,69,255,.10) 48.2%,transparent 55%,transparent 78%,rgba(255,67,175,.09) 78.2%,transparent 85%),
+repeating-linear-gradient(135deg,rgba(255,255,255,.025) 0 1px,transparent 1px 34px),
+linear-gradient(145deg,#060a19 0%,#10112c 42%,#07172a 70%,#160c29 100%)!important;
+background-size:auto,auto,auto,auto,100% 100%,100% 100%,100% 100%!important;background-position:center;background-attachment:fixed!important;animation:arenaGlow 18s ease-in-out infinite alternate}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.95;background:
+radial-gradient(ellipse at 50% -15%,rgba(38,206,255,.24),transparent 45%),
+radial-gradient(ellipse at 50% 115%,rgba(153,56,255,.28),transparent 44%),
+repeating-linear-gradient(90deg,transparent 0 11%,rgba(66,213,255,.045) 11.1% 11.25%,transparent 11.35% 22%),
+linear-gradient(180deg,rgba(4,8,22,.05),rgba(4,8,22,.28));
+mix-blend-mode:screen}
+body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.34;background-image:
+radial-gradient(circle at 50% 50%,rgba(152,230,255,.95) 0 1px,transparent 1.8px),
+linear-gradient(115deg,transparent 0 48%,rgba(47,207,255,.13) 49%,transparent 50%),
+linear-gradient(25deg,transparent 0 48%,rgba(255,77,185,.11) 49%,transparent 50%);
+background-size:46px 46px,100% 100%,100% 100%;mask-image:linear-gradient(to bottom,black 0%,black 78%,transparent 100%)}
+@keyframes arenaGlow{0%{background-position:center,center,center,center,0 0,0 0,0 0;filter:saturate(1)}100%{background-position:center,center,center,center,2% 0,18px 14px,0 0;filter:saturate(1.2)}}
+/* Keep the arena visible between content sections while panels remain readable */
+section:not(.hero){background-color:rgba(5,10,25,.40)!important;background-image:linear-gradient(135deg,rgba(13,29,54,.48),rgba(13,10,35,.40))!important}
+header{background:rgba(4,9,23,.86)!important;backdrop-filter:blur(12px)}
+footer{background:rgba(4,9,23,.58)!important}
+@media(prefers-reduced-motion:reduce){body{animation:none!important}}
+
 </style>
 </head>
 <body>
