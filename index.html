@@ -115,6 +115,17 @@ section{scroll-margin-top:82px}
 .grid>.card:nth-child(2),.card-gallery>.gallery-card:nth-child(2){animation-delay:.07s}
 .grid>.card:nth-child(3),.card-gallery>.gallery-card:nth-child(3){animation-delay:.14s}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Extra site-wide atmosphere: slow aurora, drifting light pools and subtle star grid */
+html{background:#080b1b}
+body{position:relative;isolation:isolate;background-color:#080b1b!important;background-image:radial-gradient(ellipse at 12% 18%,#00c8ff25 0,transparent 32%),radial-gradient(ellipse at 88% 22%,#ff35b51d 0,transparent 34%),radial-gradient(ellipse at 52% 92%,#8b36ff2b 0,transparent 38%),radial-gradient(circle at 50% 50%,#ffffff08 1px,transparent 1.5px),linear-gradient(125deg,#0a1022,#10102a 45%,#071625 75%,#130d27)!important;background-size:auto,auto,auto,34px 34px,220% 220%!important;background-attachment:fixed!important;animation:ambientDrift 24s ease-in-out infinite alternate}
+body:before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 18% 30%,#00d9ff25 0,transparent 28%),radial-gradient(ellipse at 76% 26%,#b44dff28 0,transparent 30%),radial-gradient(ellipse at 68% 76%,#ff38b51b 0,transparent 26%),radial-gradient(ellipse at 25% 80%,#167bff20 0,transparent 29%);filter:blur(28px);animation:auroraFloat 20s ease-in-out infinite alternate}
+body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.2;background-image:linear-gradient(115deg,transparent 0 48%,#8be7ff12 49%,transparent 50%),radial-gradient(circle,#c7f5ff 0.7px,transparent 1px);background-size:100% 100%,73px 73px;background-position:0 0,0 0;mask-image:linear-gradient(to bottom,black,transparent 90%)}
+@keyframes ambientDrift{0%{background-position:0 0,0 0,0 0,0 0,0% 50%}100%{background-position:4% -2%, -4% 4%,2% -3%,17px 20px,100% 50%}}
+@keyframes auroraFloat{0%{transform:translate3d(-1.5%,1%,0) scale(.98);opacity:.65}50%{opacity:1}100%{transform:translate3d(1.5%,-1%,0) scale(1.04);opacity:.8}}
+main,section,footer{position:relative}
+@media(prefers-reduced-motion:reduce){body,body:before{animation:none!important}}
+
 </style>
 </head>
 <body>
