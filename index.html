@@ -90,6 +90,31 @@ footer{background:#070d19;border-top-color:#29466d}
 #submit .formbox:before{content:"✦  ✧  ✦";position:absolute;right:18px;top:7px;font-size:1.7rem;letter-spacing:8px;color:#59dfff38;pointer-events:none}
 @media(max-width:520px){.collectible-art{gap:7px;padding:16px 0 22px}.art-card{width:30%;padding:8px 5px;border-radius:10px}.art-stamp{font-size:.42rem;letter-spacing:.4px}.art-card small{font-size:.37rem;letter-spacing:.5px}.hero-perks span{font-size:.72rem;padding:7px 9px}}
 
+
+/* WinnieCardHouse polish: subtle motion, glow and interaction feedback */
+html{scroll-padding-top:90px}
+body{background-attachment:fixed}
+header{box-shadow:0 8px 28px rgba(0,0,0,.18)}
+.brand{transition:filter .2s,transform .2s}
+.brand:hover{filter:drop-shadow(0 0 10px #7bdcff88);transform:translateY(-1px)}
+nav a{position:relative;transition:color .2s,text-shadow .2s}
+nav a:after{content:"";position:absolute;left:0;right:100%;bottom:-6px;height:2px;background:linear-gradient(90deg,#7bdcff,#a855f7,#ff91b8);transition:right .22s}
+nav a:hover:after,nav a:focus-visible:after{right:0}
+.btn{position:relative;isolation:isolate;overflow:hidden;transition:transform .22s,box-shadow .22s,filter .22s}
+.btn:before{content:"";position:absolute;z-index:-1;top:-50%;left:-80%;width:55%;height:200%;transform:rotate(22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transition:left .55s}
+.btn:hover:before{left:140%}
+.btn:hover{transform:translateY(-3px) scale(1.015);filter:saturate(1.12);box-shadow:0 12px 30px #7bdcff35}
+.card,.gallery-card,.formbox,.faq details{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.card:hover,.gallery-card:hover{transform:translateY(-6px);border-color:#7bdcff;box-shadow:0 18px 42px rgba(0,0,0,.28),0 0 22px #7bdcff18}
+.card img,.gallery-card img{transition:transform .35s ease,filter .35s ease}
+.card:hover img,.gallery-card:hover img{filter:saturate(1.12)}
+section{scroll-margin-top:82px}
+.fx-progress{position:fixed;top:0;left:0;width:100%;height:3px;z-index:1001;pointer-events:none;background:linear-gradient(90deg,#7bdcff,#a855f7,#ff91b8,#ffb84d);transform:scaleX(0);transform-origin:left;box-shadow:0 0 12px #7bdcff99}
+@keyframes cardEntrance{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.grid>.card,.card-gallery>.gallery-card{animation:cardEntrance .55s both}
+.grid>.card:nth-child(2),.card-gallery>.gallery-card:nth-child(2){animation-delay:.07s}
+.grid>.card:nth-child(3),.card-gallery>.gallery-card:nth-child(3){animation-delay:.14s}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -164,14 +189,65 @@ if (submissionForm) {
 (function(){
  const url='https://pkhddcfemlnhwlaklzlw.supabase.co';
  const key='sb_publishable_DkeILWR8Be68FK6c8UK0Sw_0TotOdmC';
- const root=document.getElementById('live-inventory'); if(!root||!window.supabase)return;
+ const root=document.getElementById('live-inventory');
+ if(!root||!window.supabase)return;
  const db=window.supabase.createClient(url,key);
- const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n};
- function renderCard(c){const card=el('article','card');card.style.padding='18px';if(c.image_url){const img=el('img');img.src=c.image_url;img.alt=c.player+' — '+c.card_name;img.loading='lazy';img.style='width:100%;height:220px;object-fit:contain;background:#10182b;border-radius:10px';card.append(img)}const title=el('h3','',c.player+' — '+c.card_name);card.append(title);const meta=[c.year,c.set_name,c.condition].filter(Boolean).join(' · ');if(meta)card.append(el('p','muted',meta));if(c.description)card.append(el('p','muted',c.description));card.append(el('p','price','
-</html>
-+Number(c.price).toFixed(2)));const link=el('a','btn','Ask about this card');link.href='mailto:tyler@winniecardhouse.com?subject='+encodeURIComponent('Question about '+c.player+' — '+c.card_name);card.append(link);return card}
- async function load(){try{const {data,error}=await db.from('cards').select('id,player,card_name,year,set_name,condition,description,price,image_url').eq('status','available').order('created_at',{ascending:false});if(error)throw error;root.replaceChildren();if(!data.length){const empty=el('div','card');empty.style='text-align:center;padding:34px 22px';empty.append(el('div','','🃏'),el('h3','','No cards listed right now'),el('p','muted','Check back soon or contact us about a card you are looking for.'));const actions=el('div','actions');actions.style.justifyContent='center';const ask=el('a','btn','Ask about a card');ask.href='#contact';const consign=el('a','btn secondary','Consign your collection');consign.href='#submit';actions.append(ask,consign);empty.append(actions);root.append(empty);return}data.forEach(c=>root.append(renderCard(c)))}catch(err){root.replaceChildren();const box=el('div','card');box.style='text-align:center;padding:30px';box.append(el('h3','','Inventory is temporarily unavailable'),el('p','muted','Please try again later or contact tyler@winniecardhouse.com for current listings.'));root.append(box);console.error('WinnieCardHouse inventory:',err.message)}}
+ const el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;};
+ function renderCard(c){
+  const card=el('article','card');
+  const titleText=[c.player,c.card_name].filter(Boolean).join(' — ')||'Sports card';
+  if(c.image_url){const img=el('img');img.src=c.image_url;img.alt=titleText;img.loading='lazy';img.style='width:100%;height:220px;object-fit:contain;background:#10182b;border-radius:10px';card.append(img);}
+  card.append(el('h3','',titleText));
+  const meta=[c.year,c.set_name,c.condition].filter(Boolean).join(' · ');
+  if(meta)card.append(el('p','muted',meta));
+  if(c.description)card.append(el('p','muted',c.description));
+  const price=Number(c.price);
+  if(c.price!==null&&c.price!==undefined&&c.price!==''&&Number.isFinite(price))card.append(el('p','price','$'+price.toFixed(2)));
+  const details=['Hi WinnieCardHouse,','','I have a question about this card:','Card: '+titleText,'Price listed: '+(c.price!==null&&c.price!==undefined&&c.price!==''&&Number.isFinite(price)?'$'+price.toFixed(2):'Please confirm'),c.year?'Year: '+c.year:'',c.set_name?'Set: '+c.set_name:'',c.condition?'Condition: '+c.condition:'',c.image_url?'Card image: '+c.image_url:'','','Could you please confirm availability and provide any additional details?','','Thank you!'].filter(Boolean).join(String.fromCharCode(10));
+  const link=el('a','btn','Ask about this card');
+  link.href='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent('tyler@winniecardhouse.com')+'&su='+encodeURIComponent('Question about '+titleText)+'&body='+encodeURIComponent(details);
+  link.target='_blank';link.rel='noopener noreferrer';link.setAttribute('aria-label','Open an email to WinnieCardHouse about '+titleText);card.append(link);
+  return card;
+ }
+ async function load(){
+  try{
+   const {data,error}=await db.from('cards').select('id,player,card_name,year,set_name,condition,description,price,image_url').eq('status','available').order('created_at',{ascending:false});
+   if(error)throw error;
+   root.replaceChildren();
+   if(!data||!data.length){
+    const empty=el('div','card');empty.style='text-align:center;padding:34px 22px';
+    empty.append(el('div','','🃏'),el('h3','','No cards listed right now'),el('p','muted','Check back soon or contact us about a card you are looking for.'));
+    const actions=el('div','actions');actions.style.justifyContent='center';
+    const ask=el('a','btn','Ask about a card');ask.href='#contact';
+    const consign=el('a','btn secondary','Consign your collection');consign.href='#submit';
+    actions.append(ask,consign);empty.append(actions);root.append(empty);return;
+   }
+   data.forEach(c=>root.append(renderCard(c)));
+  }catch(err){
+   root.replaceChildren();const box=el('div','card');box.style='text-align:center;padding:30px';
+   box.append(el('h3','','Inventory is temporarily unavailable'),el('p','muted','Please try again later or contact tyler@winniecardhouse.com for current listings.'));
+   root.append(box);console.error('WinnieCardHouse inventory:',err.message);
+  }
+ }
  load();
+})();
+</script>
+<div class="fx-progress" id="fx-progress" aria-hidden="true"></div>
+<script>
+(function(){
+ const bar=document.getElementById('fx-progress');
+ if(!bar)return;
+ let queued=false;
+ function update(){
+  const doc=document.documentElement;
+  const max=doc.scrollHeight-window.innerHeight;
+  bar.style.transform='scaleX('+(max>0?Math.min(1,window.scrollY/max):0)+')';
+  queued=false;
+ }
+ function onScroll(){if(!queued){queued=true;window.requestAnimationFrame(update);}}
+ window.addEventListener('scroll',onScroll,{passive:true});
+ window.addEventListener('resize',update);
+ update();
 })();
 </script>
 </body>
