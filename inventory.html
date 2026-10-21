@@ -8,6 +8,31 @@
 <style>
 :root{--bg:#080e1d;--panel:#111d35;--text:#f7fbff;--muted:#c2d2e9;--line:#29466d;--blue:#19c5ff;--blue2:#8be7ff;--pink:#ff5fb7}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 8% 10%,#123f79 0,transparent 28%),radial-gradient(ellipse at 92% 32%,#32175e 0,transparent 26%),#080e1d;color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}a{color:var(--blue2)}.wrap{width:min(1120px,92%);margin:auto}header{position:sticky;top:0;z-index:5;background:#060c1aeb;border-bottom:1px solid #2a80b8}.nav{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 0}.brand{font-weight:900;letter-spacing:.5px;font-size:1.2rem;text-decoration:none;color:var(--text)}.brand span{color:var(--blue)}nav{display:flex;gap:20px;flex-wrap:wrap}nav a{text-decoration:none;color:var(--text)}nav a:hover{color:var(--blue2)}.hero{padding:62px 0 36px;border-bottom:1px solid var(--line);background:linear-gradient(125deg,#101d3c,#081326 58%,#151032)}.eyebrow{color:var(--blue2);font-size:.8rem;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(2.3rem,5vw,4rem);line-height:1.08;margin:12px 0}.hero p,.muted{color:var(--muted)}.btn{display:inline-block;padding:11px 17px;border-radius:999px;text-decoration:none;font-weight:850;background:linear-gradient(115deg,#13b8f4,#5de4ff 55%,#b4f6ff);color:#061326;border:1px solid #a9f1ff}.inventory{padding:38px 0 70px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.card{padding:18px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#152746,#10182d 72%,#191632);box-shadow:0 12px 30px #02071355;min-width:0}.card img{display:block;width:100%;height:250px;object-fit:contain;background:#080f20;border-radius:10px;margin-bottom:15px}.card-photo-button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in;border-radius:10px;text-align:inherit}.card-photo-button:focus-visible{outline:3px solid var(--blue2);outline-offset:4px}.card-photo-button img{transition:transform .18s}.card-photo-button:hover img{transform:scale(1.025)}.zoom-hint{font-size:.78rem;color:var(--blue2);margin:-8px 0 12px}.lightbox{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(2,5,15,.94)}.lightbox.open{display:flex}.lightbox-panel{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;max-width:min(100%,1000px);max-height:100%;width:100%}.lightbox-image{display:block;max-width:100%;max-height:78vh;object-fit:contain;border-radius:10px;box-shadow:0 15px 60px #000b}.lightbox-caption{color:#fff;text-align:center;font-weight:750}.lightbox-close{position:absolute;top:-12px;right:0;transform:translateY(-100%);width:44px;height:44px;border-radius:50%;border:1px solid #8be7ff;background:#111d35;color:#fff;font-size:1.8rem;cursor:pointer}.lightbox-close:focus-visible{outline:3px solid var(--blue2);outline-offset:3px}.card h2{font-size:1.1rem;line-height:1.35;margin:0 0 7px}.price{font-size:1.35rem;font-weight:900;color:var(--blue2);margin:12px 0}.status{padding:28px;text-align:center}.status h2{margin-top:0}footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-size:.9rem}@media(max-width:760px){.nav{align-items:flex-start;flex-direction:column}nav{gap:12px}.grid{grid-template-columns:1fr}.card img{height:280px}}
+
+/* WinnieCardHouse polish: subtle motion, glow and interaction feedback */
+html{scroll-padding-top:90px}
+body{background-attachment:fixed}
+header{box-shadow:0 8px 28px rgba(0,0,0,.18)}
+.brand{transition:filter .2s,transform .2s}
+.brand:hover{filter:drop-shadow(0 0 10px #19c5ff88);transform:translateY(-1px)}
+nav a{position:relative;transition:color .2s,text-shadow .2s}
+nav a:after{content:"";position:absolute;left:0;right:100%;bottom:-6px;height:2px;background:linear-gradient(90deg,#19c5ff,#a855f7,#ff91b8);transition:right .22s}
+nav a:hover:after,nav a:focus-visible:after{right:0}
+.btn{position:relative;isolation:isolate;overflow:hidden;transition:transform .22s,box-shadow .22s,filter .22s}
+.btn:before{content:"";position:absolute;z-index:-1;top:-50%;left:-80%;width:55%;height:200%;transform:rotate(22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transition:left .55s}
+.btn:hover:before{left:140%}
+.btn:hover{transform:translateY(-3px) scale(1.015);filter:saturate(1.12);box-shadow:0 12px 30px #19c5ff35}
+.card,.gallery-card,.formbox,.faq details{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.card:hover,.gallery-card:hover{transform:translateY(-6px);border-color:#19c5ff;box-shadow:0 18px 42px rgba(0,0,0,.28),0 0 22px #19c5ff18}
+.card img,.gallery-card img{transition:transform .35s ease,filter .35s ease}
+.card:hover img,.gallery-card:hover img{filter:saturate(1.12)}
+section{scroll-margin-top:82px}
+.fx-progress{position:fixed;top:0;left:0;width:100%;height:3px;z-index:1001;pointer-events:none;background:linear-gradient(90deg,#19c5ff,#a855f7,#ff91b8,#ffb84d);transform:scaleX(0);transform-origin:left;box-shadow:0 0 12px #19c5ff99}
+@keyframes cardEntrance{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.grid>.card,.card-gallery>.gallery-card{animation:cardEntrance .55s both}
+.grid>.card:nth-child(2),.card-gallery>.gallery-card:nth-child(2){animation-delay:.07s}
+.grid>.card:nth-child(3),.card-gallery>.gallery-card:nth-child(3){animation-delay:.14s}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -95,6 +120,24 @@
   }
  }
  load();
+})();
+</script>
+<div class="fx-progress" id="fx-progress" aria-hidden="true"></div>
+<script>
+(function(){
+ const bar=document.getElementById('fx-progress');
+ if(!bar)return;
+ let queued=false;
+ function update(){
+  const doc=document.documentElement;
+  const max=doc.scrollHeight-window.innerHeight;
+  bar.style.transform='scaleX('+(max>0?Math.min(1,window.scrollY/max):0)+')';
+  queued=false;
+ }
+ function onScroll(){if(!queued){queued=true;window.requestAnimationFrame(update);}}
+ window.addEventListener('scroll',onScroll,{passive:true});
+ window.addEventListener('resize',update);
+ update();
 })();
 </script>
 </body>
