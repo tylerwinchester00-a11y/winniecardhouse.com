@@ -47,7 +47,34 @@ header{background:rgba(4,9,23,.86)!important;backdrop-filter:blur(12px)}
 footer{background:rgba(4,9,23,.58)!important}
 @media(prefers-reduced-motion:reduce){body{animation:none!important}}
 
-</style></head><body><main class="wrap">
+
+/* FULL-SCREEN MOVING ARENA EFFECTS */
+html,body{background-color:#030611!important}
+body{background-image:none!important;position:relative;isolation:isolate}
+.motion-arena{position:fixed!important;inset:0!important;z-index:-1!important;pointer-events:none!important;overflow:hidden!important;background:
+radial-gradient(ellipse at 15% 20%,rgba(0,210,255,.28),transparent 38%),
+radial-gradient(ellipse at 85% 72%,rgba(190,25,255,.26),transparent 40%),
+linear-gradient(135deg,#030611 0%,#080b20 48%,#10051d 100%)!important}
+.motion-arena:before{content:"";position:absolute;inset:-60%;background:repeating-linear-gradient(115deg,transparent 0 8%,rgba(0,225,255,.16) 8.15%,transparent 8.5% 19%,rgba(255,39,174,.13) 19.2%,transparent 19.6% 31%);animation:arenaSweep 12s linear infinite;filter:blur(2px)}
+.motion-arena:after{content:"";position:absolute;inset:-30%;background:repeating-radial-gradient(ellipse at center,transparent 0 65px,rgba(45,208,255,.13) 67px 69px,transparent 71px 130px);animation:arenaPulse 9s ease-in-out infinite alternate}
+.motion-arena .light-beam{position:absolute;top:-35%;height:170%;width:10%;opacity:.65;filter:blur(13px);transform:rotate(24deg);background:linear-gradient(180deg,transparent,rgba(0,225,255,.48),rgba(180,50,255,.25),transparent);animation:beamTravel 8s ease-in-out infinite}
+.motion-arena .light-beam:nth-child(1){left:8%;animation-delay:-2s}
+.motion-arena .light-beam:nth-child(2){left:37%;width:6%;background:linear-gradient(180deg,transparent,rgba(255,49,173,.55),transparent);animation-delay:-5s;animation-duration:11s}
+.motion-arena .light-beam:nth-child(3){left:70%;width:12%;animation-delay:-1s;animation-duration:10s}
+.motion-arena .light-beam:nth-child(4){left:91%;width:5%;background:linear-gradient(180deg,transparent,rgba(0,225,255,.5),transparent);animation-delay:-6s;animation-duration:9s}
+.motion-arena .speed-line{position:absolute;left:-35%;height:2px;width:42%;opacity:0;background:linear-gradient(90deg,transparent,rgba(0,240,255,.95),rgba(255,255,255,.85),transparent);box-shadow:0 0 12px rgba(0,220,255,.85);transform:rotate(-18deg);animation:speedLine 5s linear infinite}
+.motion-arena .speed-line:nth-child(5){top:18%;animation-delay:-1s}
+.motion-arena .speed-line:nth-child(6){top:43%;animation-delay:-3.2s;animation-duration:6s}
+.motion-arena .speed-line:nth-child(7){top:69%;animation-delay:-4.4s;animation-duration:5.6s}
+.motion-arena .speed-line:nth-child(8){top:88%;animation-delay:-2.4s;animation-duration:6.5s}
+@keyframes arenaSweep{from{transform:translate3d(-8%,-4%,0)}to{transform:translate3d(8%,4%,0)}}
+@keyframes arenaPulse{from{transform:scale(.88) rotate(0deg);opacity:.35}to{transform:scale(1.12) rotate(18deg);opacity:.9}}
+@keyframes beamTravel{0%,100%{transform:translateX(-80px) rotate(24deg);opacity:.18}50%{transform:translateX(110px) rotate(24deg);opacity:.85}}
+@keyframes speedLine{0%{transform:translateX(0) rotate(-18deg);opacity:0}10%{opacity:.95}75%{opacity:.85}100%{transform:translateX(360%) rotate(-18deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){.motion-arena:before,.motion-arena:after,.motion-arena .light-beam,.motion-arena .speed-line{animation:none!important}}
+
+</style></head><body>
+<div class="motion-arena" aria-hidden="true"><span class="light-beam"></span><span class="light-beam"></span><span class="light-beam"></span><span class="light-beam"></span><span class="speed-line"></span><span class="speed-line"></span><span class="speed-line"></span><span class="speed-line"></span></div><main class="wrap">
 <header><div><h1>WinnieCardHouse Admin</h1><p>Private card inventory manager</p></div><a href="./index.html">← View public website</a></header>
 <section id="loginPanel" class="panel"><h2>Owner login</h2><p>Sign in with the owner account authorized in the database setup.</p>
 <form id="loginForm"><label for="email">Owner email</label><input id="email" type="email" autocomplete="username" required value="tyler@winniecardhouse.com"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required><button type="submit">Sign in</button></form>
